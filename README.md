@@ -6,7 +6,7 @@ forum. This is intended for use in a variety of settings, bringing community dis
 
 All network goes through an `HttpAdapter`, intended for JS runtime.
 
-## Install (from GitHub — not on npm)
+## Install
 
 Add it as a git dependency. There is no prebuilt `dist` in the repo; the package's
 `prepare` script builds it automatically when your package manager installs it.
