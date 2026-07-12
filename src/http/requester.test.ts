@@ -1,7 +1,8 @@
 import { expect, test } from 'vitest'
 import { createRequester } from './requester'
 import { fakeHttp } from '../testing/fake-http'
-import { AuthRequiredError, HttpError } from './errors'
+import type { HttpAdapter } from '../options'
+import { AuthRequiredError, HttpError, TimeoutError } from './errors'
 
 test('attaches bearer from getToken for the given platform', async () => {
   const http = fakeHttp([{ match: '/comments', json: [] }])
@@ -22,6 +23,13 @@ test('json() throws HttpError on non-ok', async () => {
   const http = fakeHttp([{ match: '/x', status: 500, json: { e: 1 } }])
   const req = createRequester({ http })
   await expect(req.json('https://h.test/x')).rejects.toBeInstanceOf(HttpError)
+})
+
+test('rejects with TimeoutError when the http never resolves', async () => {
+  const http: HttpAdapter = () => new Promise(() => {})
+  const req = createRequester({ http })
+  await expect(req.request('https://slow.test/x', { timeoutMs: 10 }))
+    .rejects.toBeInstanceOf(TimeoutError)
 })
 
 test('caches GET responses through the cache adapter', async () => {

@@ -20,6 +20,6 @@ export class MemoryCache implements CacheAdapter {
   }
 
   async set(k: string, v: unknown, ttlMs?: number): Promise<void> {
-    this.store.set(k, { value: v, expiresAt: ttlMs ? this.now() + ttlMs : Infinity })
+    this.store.set(k, { value: v, expiresAt: ttlMs !== undefined ? this.now() + ttlMs : Infinity })
   }
 }

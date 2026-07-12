@@ -15,8 +15,10 @@ const ENTITIES: Array<[RegExp, string]> = [
 export function stripMarkdown(input: string | undefined | null): string {
   if (!input) return ''
   let s = String(input).replace(/\r\n/g, '\n')
-  s = s.replace(/<[^>]+>/g, '') // real html tags (must run before entity-decode,
-  // otherwise decoded `&lt;x&gt;` sequences would be mistaken for tags)
+  s = s.replace(/<\/?[a-zA-Z][\w-]*(?:\s[^<>]*)?>/g, '') // real html tags (must run
+  // before entity-decode, otherwise decoded `&lt;x&gt;` sequences would be
+  // mistaken for tags). Requiring tag-like structure keeps bare `<`/`>`
+  // comparison operators in prose intact.
   for (const [re, to] of ENTITIES) s = s.replace(re, to)
   s = s.replace(/>!/g, '').replace(/!</g, '')
   s = s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1') // images → alt

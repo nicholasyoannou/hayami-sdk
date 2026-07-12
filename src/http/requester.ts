@@ -1,6 +1,6 @@
 import type { CacheAdapter, HttpAdapter, Logger, RequesterResponse } from '../options'
 import type { Platform } from '../types'
-import { HttpError, AuthRequiredError, RateLimitedError } from './errors'
+import { HttpError, AuthRequiredError, RateLimitedError, TimeoutError } from './errors'
 
 export interface RequestOptions {
   method?: string
@@ -40,9 +40,11 @@ export function createRequester(o: {
     const method = opts.method ?? 'GET'
     const headers: Record<string, string> = { ...(opts.headers ?? {}) }
 
+    if (opts.auth && !opts.platform) throw new Error('requester: auth requires a platform')
+
     let token: string | undefined
     if (opts.platform && o.getToken) token = await o.getToken(opts.platform)
-    if (opts.auth && !token) throw new AuthRequiredError(opts.platform as Platform)
+    if (opts.auth && !token) throw new AuthRequiredError(opts.platform!)
     if (token && !headers.Authorization) headers.Authorization = `Bearer ${token}`
 
     const cacheable = method === 'GET' && !!opts.cacheKey && !!o.cache
@@ -92,7 +94,7 @@ export function createRequester(o: {
   async function withTimeout(p: Promise<RequesterResponse>, ms: number, url: string) {
     let t: ReturnType<typeof setTimeout> | undefined
     const timeout = new Promise<never>((_, reject) => {
-      t = setTimeout(() => reject(new HttpError(`timeout after ${ms}ms: ${url}`, 0, url)), ms)
+      t = setTimeout(() => reject(new TimeoutError(url, ms)), ms)
     })
     try {
       return await Promise.race([p, timeout])

@@ -17,3 +17,10 @@ test('honours ttl using an injected clock', async () => {
   now = 1051
   expect(await c.get('a')).toBeUndefined()
 })
+
+test('ttl of 0 expires immediately', async () => {
+  let now = 1000
+  const c = new MemoryCache(() => now)
+  await c.set('a', 1, 0)
+  expect(await c.get('a')).toBeUndefined()
+})

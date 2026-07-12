@@ -19,6 +19,12 @@ export class RateLimitedError extends HttpError {
   }
 }
 
+export class TimeoutError extends HttpError {
+  constructor(url: string, readonly timeoutMs: number) {
+    super(`timeout after ${timeoutMs}ms: ${url}`, 0, url)
+  }
+}
+
 export class AuthRequiredError extends HayamiSdkError {
   constructor(readonly platform: Platform, message = `auth required for ${platform}`) {
     super(message)
