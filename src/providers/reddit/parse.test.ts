@@ -24,3 +24,10 @@ test('empty-string replies are ignored', () => {
   const out = parseComments([{ kind: 't1', data: { name: 't1_a', body: 'x', replies: '' } }])
   expect(out[0]!.replies).toBeUndefined()
 })
+
+test('captures a bare more-node reply (no Listing wrapper)', () => {
+  const out = parseComments([{ kind: 't1', data: { name: 't1_a', body: 'x', replies: { kind: 'more', data: { count: 5, children: ['g1', 'g2'] } } } }])
+  expect(out[0]!.replies).toBeUndefined()
+  expect(out[0]!.moreCount).toBe(5)
+  expect(out[0]!.moreChildrenIds).toEqual(['g1', 'g2'])
+})

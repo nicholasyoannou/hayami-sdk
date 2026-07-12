@@ -39,14 +39,19 @@ export function parseComments(children: any[]): RedditComment[] {
     if (Array.isArray(d.author_flair_richtext)) c.author_flair_richtext = d.author_flair_richtext
 
     const rep = d.replies
-    if (rep && typeof rep === 'object' && rep.data && Array.isArray(rep.data.children)) {
-      const kids = rep.data.children as any[]
-      const nested = parseComments(kids)
-      if (nested.length) c.replies = nested
-      const more = kids.find((k) => k?.kind === 'more')
-      if (more?.data) {
-        c.moreCount = more.data.count
-        c.moreChildrenIds = Array.isArray(more.data.children) ? more.data.children : []
+    if (rep && typeof rep === 'object') {
+      if (rep.kind === 'more' && rep.data) {
+        c.moreCount = rep.data.count
+        c.moreChildrenIds = Array.isArray(rep.data.children) ? rep.data.children : []
+      } else if (rep.data && Array.isArray(rep.data.children)) {
+        const kids = rep.data.children as any[]
+        const nested = parseComments(kids)
+        if (nested.length) c.replies = nested
+        const more = kids.find((k) => k?.kind === 'more')
+        if (more?.data) {
+          c.moreCount = more.data.count
+          c.moreChildrenIds = Array.isArray(more.data.children) ? more.data.children : []
+        }
       }
     }
     out.push(c)
