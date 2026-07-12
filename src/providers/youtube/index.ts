@@ -10,7 +10,7 @@ export const youtubeProvider: Provider = {
   async resolve(q: DiscussionQuery, ctx: ProviderCtx): Promise<ThreadRef[]> {
     const episode = typeof q.episode === 'number' ? q.episode : null
     if (episode == null || !q.titles?.length) return []
-    const base = ctx.endpoints.youtubePlaylistMapper
+    const base = ctx.endpoints.hayamiMapper
     const name = q.titles[0]!
     let data: any
     try {

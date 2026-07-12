@@ -4,7 +4,7 @@ import { DEFAULT_ENDPOINTS, resolveEndpoints } from './options'
 test('default endpoints point at the real public hosts', () => {
   expect(DEFAULT_ENDPOINTS.mapper).toBe('https://discussanime.moe')
   expect(DEFAULT_ENDPOINTS.anilist).toBe('https://graphql.anilist.co')
-  expect(DEFAULT_ENDPOINTS.youtubePlaylistMapper).toBe('https://api.hayami.moe')
+  expect(DEFAULT_ENDPOINTS.hayamiMapper).toBe('https://api.hayami.moe')
 })
 
 test('mapperBaseUrl overrides endpoints.mapper', () => {

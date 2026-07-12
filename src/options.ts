@@ -24,7 +24,7 @@ export interface Endpoints {
   jikan: string
   mal: string
   youtube: string
-  youtubePlaylistMapper: string // api.hayami.moe (series → playlist for youtube resolve)
+  hayamiMapper: string // api.hayami.moe — Hayami mapper: reddit (default) / youtube (platform=youtube) / aniwave
 }
 
 export const DEFAULT_ENDPOINTS: Endpoints = {
@@ -35,7 +35,7 @@ export const DEFAULT_ENDPOINTS: Endpoints = {
   jikan: 'https://api.jikan.moe/v4',
   mal: 'https://api.myanimelist.net/v2',
   youtube: 'https://www.googleapis.com/youtube/v3',
-  youtubePlaylistMapper: 'https://api.hayami.moe',
+  hayamiMapper: 'https://api.hayami.moe',
 }
 
 export interface CacheAdapter {
