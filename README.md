@@ -22,18 +22,13 @@ or from the CLI:
 
 ```sh
 npm  install github:nicholasyoannou/hayami-sdk
-bun  add     github:nicholasyoannou/hayami-sdk
 pnpm add     github:nicholasyoannou/hayami-sdk
+yarn add     github:nicholasyoannou/hayami-sdk
 ```
 
 Pin a commit or tag for reproducibility: `github:nicholasyoannou/hayami-sdk#<sha>`.
 
-**bun consumers:** if the build doesn't run on install, allow the package's
-lifecycle script by adding it to your `package.json`:
-
-```jsonc
-"trustedDependencies": ["@nicholasyoannou/hayami-sdk"]
-```
+> Install with npm, pnpm, or yarn — they build the package (`prepare`) on install.
 
 ## Provide an HttpAdapter
 ```ts
