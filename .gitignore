@@ -5,6 +5,6 @@ dist/
 .env
 .env.*
 
-# local-only planning artifacts (spec + implementation plan) — not published
-docs/superpowers/
+# local-only docs (spec, implementation plan, wire-format notes) — not published
+docs/
 .claude/
