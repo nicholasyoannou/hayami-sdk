@@ -1,0 +1,30 @@
+{
+  "name": "@nicholasyoannou/hayami-sdk",
+  "version": "0.0.0",
+  "description": "Headless, dependency-injected library for mapping and fetching anime episode discussions across Reddit, AniList, MyAnimeList, YouTube, and the discussanime forum.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./reddit": { "types": "./dist/reddit/index.d.ts", "import": "./dist/reddit/index.js" },
+    "./anilist": { "types": "./dist/anilist/index.d.ts", "import": "./dist/anilist/index.js" },
+    "./mal": { "types": "./dist/mal/index.d.ts", "import": "./dist/mal/index.js" },
+    "./youtube": { "types": "./dist/youtube/index.d.ts", "import": "./dist/youtube/index.js" },
+    "./forum": { "types": "./dist/forum/index.d.ts", "import": "./dist/forum/index.js" },
+    "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
