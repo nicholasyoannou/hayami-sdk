@@ -4,6 +4,7 @@ import { searchRedditDiscussion } from './search'
 import { getPostComments } from './comments'
 import { postToThreadRef, redditCommentToComment } from './normalize'
 import { submitComment, editComment, deleteComment, voteThing } from './write'
+import { fetchRedditThreadMap } from './mapper'
 
 export const redditProvider: Provider = {
   platforms: ['reddit'],
@@ -11,6 +12,10 @@ export const redditProvider: Provider = {
   async resolve(q: DiscussionQuery, ctx: ProviderCtx): Promise<ThreadRef[]> {
     const episode = typeof q.episode === 'number' ? q.episode : null
     if (episode == null || !q.titles?.length) return []
+    // Hayami mapper first (per-episode reddit thread URL mappings)...
+    const mapped = await fetchRedditThreadMap(ctx, { titles: q.titles, episode, malId: q.malId, anilistId: q.anilistId })
+    if (mapped.length) return mapped
+    // ...then fall back to the direct reddit.com maintainer search.
     const refs: ThreadRef[] = []
     const seen = new Set<string>()
     for (const title of q.titles) {
@@ -50,3 +55,4 @@ export { getPostComments } from './comments'
 export { searchRedditDiscussion } from './search'
 export * from './wire'
 export * from './write'
+export * from './mapper'

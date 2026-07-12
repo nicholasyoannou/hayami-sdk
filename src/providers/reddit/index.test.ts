@@ -36,3 +36,22 @@ test('provider exposes write methods that delegate to write.ts', async () => {
   const c = await redditProvider.postComment!({ platform: 'reddit', id: 'p' }, 'hi', {}, ctx(http, 'tok') as any)
   expect(c.id).toBe('x')
 })
+
+test('resolve uses the Hayami mapper first', async () => {
+  const http = fakeHttp([{ match: 'api.hayami.moe/anime/search', json: { results: [
+    { is_exact_match: true, episodes: { '5': 'https://www.reddit.com/r/anime/comments/m5/x/' } },
+  ] } }])
+  const refs = await redditProvider.resolve({ titles: ['Frieren'], episode: 5 }, ctx(http))
+  expect(refs).toEqual([{ platform: 'reddit', id: 'm5', url: 'https://www.reddit.com/r/anime/comments/m5/x/', episode: 5 }])
+})
+
+test('resolve falls back to direct reddit search when the mapper misses', async () => {
+  const http = fakeHttp([
+    { match: 'api.hayami.moe/anime/search', json: { results: [] } },
+    { match: '/r/anime/search.json', json: { data: { children: [
+      { data: { id: 'g', title: 'Frieren - Episode 5 discussion', author: 'autolovepon', permalink: '/p/g/', num_comments: 9, created_utc: 1700000000 } },
+    ] } } },
+  ])
+  const refs = await redditProvider.resolve({ titles: ['Frieren'], episode: 5 }, ctx(http))
+  expect(refs[0]).toMatchObject({ platform: 'reddit', id: 'g', episode: 5 })
+})
