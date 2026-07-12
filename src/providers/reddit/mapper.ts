@@ -42,16 +42,17 @@ function idMatches(entry: MapperResultEntry, malId?: number, anilistId?: number)
   return false
 }
 
-function pickEntry(res: MapperResponse, malId?: number, anilistId?: number): MapperResultEntry | null {
+function orderedCandidates(res: MapperResponse, malId?: number, anilistId?: number): MapperResultEntry[] {
   const entries = Array.isArray(res.results) ? res.results : []
-  if (!entries.length) return null
-  if (malId || anilistId) {
-    const byId = entries.find((e) => idMatches(e, malId, anilistId))
-    if (byId) return byId
-  }
-  const exact = entries.find((e) => e.is_exact_match && e.episodes && Object.keys(e.episodes).length > 0)
-  if (exact) return exact
-  return entries.find((e) => e.episodes && Object.keys(e.episodes).length > 0) ?? entries[0]!
+  if (!entries.length) return []
+  const ranked: MapperResultEntry[] = []
+  const push = (e?: MapperResultEntry) => { if (e && !ranked.includes(e)) ranked.push(e) }
+  if (malId || anilistId) for (const e of entries) if (idMatches(e, malId, anilistId)) push(e)
+  const idx = res.matched_result?.index
+  if (typeof idx === 'number' && entries[idx]) push(entries[idx])
+  for (const e of entries) if (e.is_exact_match) push(e)
+  for (const e of entries) push(e)
+  return ranked
 }
 
 /**
@@ -74,12 +75,14 @@ export async function fetchRedditThreadMap(
       ctx.log.warn('[reddit] hayami mapper failed', e)
       continue
     }
-    const entry = pickEntry(res, q.malId, q.anilistId)
-    const url = entry?.episodes?.[String(q.episode)]
-    if (!url) continue
-    const id = redditPostIdFromUrl(url)
-    if (!id) continue
-    return [{ platform: 'reddit', id, url: url.startsWith('http') ? url : `${REDDIT_WEB}${url}`, episode: q.episode }]
+    for (const entry of orderedCandidates(res, q.malId, q.anilistId)) {
+      const url = entry.episodes?.[String(q.episode)]
+      if (!url) continue
+      const id = redditPostIdFromUrl(url)
+      if (!id) continue
+      return [{ platform: 'reddit', id, url: url.startsWith('http') ? url : `${REDDIT_WEB}${url}`, episode: q.episode }]
+    }
+    continue
   }
   return []
 }

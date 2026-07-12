@@ -34,3 +34,12 @@ test('fetchRedditThreadMap returns [] when the episode is not mapped', async () 
   const http = fakeHttp([{ match: '/anime/search', json: { results: [{ episodes: { '1': 'https://www.reddit.com/r/anime/comments/z/z/' } }] } }])
   expect(await fetchRedditThreadMap(ctx(http), { titles: ['X'], episode: 9 })).toEqual([])
 })
+
+test('walks candidates when the id-matched entry lacks the episode', async () => {
+  const http = fakeHttp([{ match: '/anime/search', json: { results: [
+    { external_sites: { mal_id: 111 }, episodes: { '1': 'https://www.reddit.com/r/anime/comments/a/x/' } },
+    { is_exact_match: true, episodes: { '5': 'https://www.reddit.com/r/anime/comments/b/y/' } },
+  ] } }])
+  const refs = await fetchRedditThreadMap(ctx(http), { titles: ['X'], episode: 5, malId: 111 })
+  expect(refs).toEqual([{ platform: 'reddit', id: 'b', url: 'https://www.reddit.com/r/anime/comments/b/y/', episode: 5 }])
+})
