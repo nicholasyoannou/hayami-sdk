@@ -30,6 +30,8 @@ export function pickBestChannelResult(data: any, seriesName: string): Playlist |
     const pl = ch.best_match as Playlist
     const title = normalize(pl.title ?? '')
     const exact = title === target
+    const related = exact || (!!title && (title.includes(target) || target.includes(title)))
+    if (!related) continue
     const count = pl.videos?.length ?? 0
     if (!best || (exact && !best.exact) || (exact === best.exact && count > best.count)) {
       best = { pl, exact, count }
