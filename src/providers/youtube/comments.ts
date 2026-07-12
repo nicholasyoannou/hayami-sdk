@@ -17,9 +17,10 @@ function mapThreadItem(item: any): YouTubeComment {
 
 /** GET commentThreads (bearer via getToken('youtube')). */
 export async function getVideoComments(ctx: ProviderCtx, videoId: string): Promise<YouTubeComment[]> {
-  const url = `${ctx.endpoints.youtube}/commentThreads?part=snippet,replies&videoId=${videoId}&maxResults=50&order=relevance&textFormat=plainText`
+  const keyParam = ctx.youtubeApiKey ? `&key=${ctx.youtubeApiKey}` : ''
+  const url = `${ctx.endpoints.youtube}/commentThreads?part=snippet,replies&videoId=${videoId}&maxResults=50&order=relevance&textFormat=plainText${keyParam}`
   try {
-    const body = await ctx.request.json<any>(url, { platform: 'youtube' })
+    const body = await ctx.request.json<any>(url, ctx.youtubeApiKey ? {} : { platform: 'youtube' })
     return Array.isArray(body?.items) ? body.items.map(mapThreadItem) : []
   } catch (e) {
     ctx.log.warn('[youtube] commentThreads failed', e)

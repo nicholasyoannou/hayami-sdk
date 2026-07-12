@@ -44,3 +44,12 @@ test('caches GET responses through the cache adapter', async () => {
   expect(a).toEqual(b)
   expect(http.calls.length).toBe(1) // second read served from cache
 })
+
+test('auto-caches GET responses without an explicit cacheKey', async () => {
+  const store = new Map<string, unknown>()
+  const http = fakeHttp([{ match: '/threads', json: { threads: [1] } }])
+  const req = createRequester({ http, cache: { get: async (k) => store.get(k), set: async (k, v) => void store.set(k, v) } })
+  await req.json('https://m.test/threads')
+  await req.json('https://m.test/threads')
+  expect(http.calls.length).toBe(1)
+})

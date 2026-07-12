@@ -47,9 +47,10 @@ export function createRequester(o: {
     if (opts.auth && !token) throw new AuthRequiredError(opts.platform!)
     if (token && !headers.Authorization) headers.Authorization = `Bearer ${token}`
 
-    const cacheable = method === 'GET' && !!opts.cacheKey && !!o.cache
-    if (cacheable) {
-      const hit = (await o.cache!.get(opts.cacheKey!)) as CachedBody | undefined
+    const cacheKey =
+      method === 'GET' && o.cache ? (opts.cacheKey ?? `${method}\n${url}\n${opts.body ?? ''}`) : undefined
+    if (cacheKey) {
+      const hit = (await o.cache!.get(cacheKey)) as CachedBody | undefined
       if (hit) return toResponse(hit)
     }
 
@@ -59,10 +60,10 @@ export function createRequester(o: {
       url,
     )
 
-    if (cacheable && res.ok) {
+    if (cacheKey && res.ok) {
       const body = await res.text()
       const snapshot: CachedBody = { status: res.status, headers: res.headers, body }
-      await o.cache!.set(opts.cacheKey!, snapshot, opts.cacheTtlMs)
+      await o.cache!.set(cacheKey, snapshot, opts.cacheTtlMs)
       return toResponse(snapshot)
     }
     return res

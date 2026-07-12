@@ -28,3 +28,10 @@ test('getComments maps commentThreads to normalized comments (ISO→ms, plaintex
 test('capabilities: youtube read-only', () => {
   expect(youtubeProvider.capabilities()).toEqual({ comment: false, edit: false, delete: false, vote: false, downvote: false })
 })
+
+test('getComments uses youtubeApiKey (key= param) when provided', async () => {
+  const http = fakeHttp([{ match: '/commentThreads', json: { items: [] } }])
+  const keyCtx = { request: createRequester({ http }), endpoints: DEFAULT_ENDPOINTS, youtubeApiKey: 'KEY123', log: { debug() {}, warn() {}, error() {} } }
+  await youtubeProvider.getComments!({ platform: 'youtube', id: 'vid' }, keyCtx as any)
+  expect(http.calls[0]!.url).toContain('key=KEY123')
+})
