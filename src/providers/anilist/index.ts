@@ -3,6 +3,8 @@ import type { Comment, DiscussionQuery, ThreadRef } from '../../types'
 import { anilistQuery } from './client'
 import { COMMENTS_QUERY, THREADS_QUERY } from './graphql'
 import { anilistCommentToComment, normalizeComment, threadToThreadRef, type AniListThread } from './normalize'
+import { saveThreadComment, toggleLike } from './write'
+import { NotSupportedError } from '../../http/errors'
 
 export const anilistProvider: Provider = {
   platforms: ['anilist'],
@@ -40,8 +42,24 @@ export const anilistProvider: Provider = {
       .map(anilistCommentToComment)
   },
 
+  async postComment(ref, bodyMarkdown, opts, ctx) {
+    return saveThreadComment(ctx, {
+      threadId: Number(ref.id),
+      parentCommentId: opts.parentId ? Number(opts.parentId) : undefined,
+      comment: bodyMarkdown,
+    })
+  },
+  async editComment(ref, bodyMarkdown, ctx) {
+    return saveThreadComment(ctx, { id: Number(ref.id), comment: bodyMarkdown })
+  },
+  async vote(target, dir, ctx) {
+    if (dir === -1) throw new NotSupportedError('anilist', 'vote') // AniList likes have no downvote
+    await toggleLike(ctx, Number(target.id), 'THREAD_COMMENT') // toggle: dir 1/0 both flip like state
+  },
+
   capabilities: () => ({ comment: true, edit: true, delete: false, vote: true, downvote: false }),
 }
 
 export { anilistQuery } from './client'
 export * from './normalize'
+export * from './write'

@@ -3,6 +3,7 @@ import { anilistProvider } from './index'
 import { createRequester } from '../../http/requester'
 import { fakeHttp } from '../../testing/fake-http'
 import { DEFAULT_ENDPOINTS } from '../../options'
+import { NotSupportedError } from '../../http/errors'
 
 const ctx = (http: ReturnType<typeof fakeHttp>) => ({
   request: createRequester({ http }), endpoints: DEFAULT_ENDPOINTS,
@@ -20,4 +21,10 @@ test('resolve returns anilist ThreadRefs, episode-filtered when possible', async
 
 test('capabilities: comment/edit/vote yes, delete/downvote no', () => {
   expect(anilistProvider.capabilities()).toEqual({ comment: true, edit: true, delete: false, vote: true, downvote: false })
+})
+
+test('vote(-1) is not supported on anilist', async () => {
+  await expect(anilistProvider.vote!({ platform: 'anilist', id: '1' }, -1, ctx(fakeHttp([])) as any))
+    .rejects.toBeInstanceOf(NotSupportedError)
+  expect(anilistProvider.deleteComment).toBeUndefined()
 })
