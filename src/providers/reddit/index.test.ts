@@ -4,8 +4,9 @@ import { createRequester } from '../../http/requester'
 import { fakeHttp } from '../../testing/fake-http'
 import { DEFAULT_ENDPOINTS } from '../../options'
 
-const ctx = (http: ReturnType<typeof fakeHttp>) => ({
-  request: createRequester({ http }), endpoints: DEFAULT_ENDPOINTS,
+const ctx = (http: ReturnType<typeof fakeHttp>, token?: string) => ({
+  request: createRequester({ http, getToken: async () => token }), endpoints: DEFAULT_ENDPOINTS,
+  getToken: async () => token,
   log: { debug() {}, warn() {}, error() {} },
 })
 
@@ -28,4 +29,10 @@ test('getComments maps to normalized Comment[]', async () => {
 
 test('capabilities: reddit supports everything incl. downvote', () => {
   expect(redditProvider.capabilities()).toEqual({ comment: true, edit: true, delete: true, vote: true, downvote: true })
+})
+
+test('provider exposes write methods that delegate to write.ts', async () => {
+  const http = fakeHttp([{ match: '/api/comment', json: { json: { errors: [], data: { things: [{ data: { id: 't1_x', body: 'hi' } }] } } } }])
+  const c = await redditProvider.postComment!({ platform: 'reddit', id: 'p' }, 'hi', {}, ctx(http, 'tok') as any)
+  expect(c.id).toBe('x')
 })

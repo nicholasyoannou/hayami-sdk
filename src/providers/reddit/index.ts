@@ -3,6 +3,7 @@ import type { Comment, DiscussionQuery, ThreadRef } from '../../types'
 import { searchRedditDiscussion } from './search'
 import { getPostComments } from './comments'
 import { postToThreadRef, redditCommentToComment } from './normalize'
+import { submitComment, editComment, deleteComment, voteThing } from './write'
 
 export const redditProvider: Provider = {
   platforms: ['reddit'],
@@ -28,6 +29,19 @@ export const redditProvider: Provider = {
     return res.comments.map(redditCommentToComment)
   },
 
+  async postComment(ref, bodyMarkdown, opts, ctx) {
+    return submitComment(ctx, ref, bodyMarkdown, opts)
+  },
+  async editComment(ref, bodyMarkdown, ctx) {
+    return editComment(ctx, ref, bodyMarkdown)
+  },
+  async deleteComment(ref, ctx) {
+    return deleteComment(ctx, ref)
+  },
+  async vote(target, dir, ctx) {
+    return voteThing(ctx, target, dir)
+  },
+
   capabilities: () => ({ comment: true, edit: true, delete: true, vote: true, downvote: true }),
 }
 
@@ -35,3 +49,4 @@ export { parseComments } from './parse'
 export { getPostComments } from './comments'
 export { searchRedditDiscussion } from './search'
 export * from './wire'
+export * from './write'
