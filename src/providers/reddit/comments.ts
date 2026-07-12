@@ -23,7 +23,12 @@ export async function getPostComments(
     ctx.log.warn('[reddit] authed comments failed, trying public', e)
   }
   if (!body) {
-    body = await ctx.request.json(publicUrl)
+    try {
+      body = await ctx.request.json(publicUrl)
+    } catch (e) {
+      ctx.log.warn('[reddit] public comments failed', e)
+      return { comments: [], rootMoreChildrenIds: [], linkFullname: `t3_${postId}` }
+    }
   }
 
   const postListing = Array.isArray(body) ? body[0] : undefined

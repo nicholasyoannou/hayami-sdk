@@ -59,7 +59,14 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
       const thread: Thread = { platform: r.platform, id: r.id, title: '' }
       if (r.url) thread.url = r.url
       if (typeof r.commentCount === 'number') thread.replyCount = r.commentCount
-      if (opts?.withComments) thread.comments = await getComments(r)
+      if (opts?.withComments) {
+        try {
+          thread.comments = await getComments(r)
+        } catch (e) {
+          log.warn('[getDiscussion]', r.platform, e)
+          thread.comments = []
+        }
+      }
       return thread
     }))
   }
