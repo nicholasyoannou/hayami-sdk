@@ -6,6 +6,35 @@ forum. This is intended for use in a variety of settings, bringing community dis
 
 All network goes through an `HttpAdapter`, intended for JS runtime.
 
+## Install (from GitHub — not on npm)
+
+Add it as a git dependency. There is no prebuilt `dist` in the repo; the package's
+`prepare` script builds it automatically when your package manager installs it.
+
+```jsonc
+// your package.json
+"dependencies": {
+  "@nicholasyoannou/hayami-sdk": "github:nicholasyoannou/hayami-sdk"
+}
+```
+
+or from the CLI:
+
+```sh
+npm  install github:nicholasyoannou/hayami-sdk
+bun  add     github:nicholasyoannou/hayami-sdk
+pnpm add     github:nicholasyoannou/hayami-sdk
+```
+
+Pin a commit or tag for reproducibility: `github:nicholasyoannou/hayami-sdk#<sha>`.
+
+**bun consumers:** if the build doesn't run on install, allow the package's
+lifecycle script by adding it to your `package.json`:
+
+```jsonc
+"trustedDependencies": ["@nicholasyoannou/hayami-sdk"]
+```
+
 ## Provide an HttpAdapter
 ```ts
 import { createDiscussionClient, type HttpAdapter } from '@nicholasyoannou/hayami-sdk'
