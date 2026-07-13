@@ -34,7 +34,9 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
   const request = createRequester({
     http: o.http, getToken: o.getToken, cache: o.cache, logger: log, defaultTimeoutMs: o.defaultTimeoutMs,
   })
-  const ctx: ProviderCtx = { request, endpoints, getToken: o.getToken, youtubeApiKey: o.youtubeApiKey, log }
+  const ctx: ProviderCtx = {
+    request, endpoints, getToken: o.getToken, youtubeApiKey: o.youtubeApiKey, log, disqusEmbed: o.disqusEmbed,
+  }
   const registry = buildRegistry([redditProvider, anilistProvider, malProvider, youtubeProvider, forumProvider])
 
   async function resolve(q: DiscussionQuery): Promise<ThreadRef[]> {

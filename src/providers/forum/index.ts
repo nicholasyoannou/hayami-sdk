@@ -16,7 +16,20 @@ export const forumProvider: Provider = {
       episodeCandidates: [q.episode],
       isMovie: q.isMovie,
     })
-    return hit ? [rowToThreadRef(hit)] : []
+    if (!hit) return []
+    const ref = rowToThreadRef(hit)
+    if (ref.platform === 'disqus' && ctx.disqusEmbed) {
+      ref.embedUrl = ctx.disqusEmbed({
+        forumShortname: hit.forum_shortname,
+        identifier: String(hit.identifier),
+        url: hit.url,
+        title: hit.title,
+        malId: q.malId,
+        anilistId: q.anilistId,
+        episode: typeof q.episode === 'number' ? q.episode : undefined,
+      })
+    }
+    return [ref]
   },
 
   capabilities: () => ({ comment: false, edit: false, delete: false, vote: false, downvote: false }),

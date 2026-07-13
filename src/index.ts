@@ -3,7 +3,7 @@ export * from './types'
 export {
   DEFAULT_ENDPOINTS, resolveEndpoints,
   type HttpAdapter, type RequesterResponse, type DiscussionClientOptions,
-  type Endpoints, type CacheAdapter, type Logger,
+  type Endpoints, type CacheAdapter, type Logger, type DisqusEmbedInput,
 } from './options'
 export {
   HayamiSdkError, HttpError, RateLimitedError, TimeoutError, AuthRequiredError,

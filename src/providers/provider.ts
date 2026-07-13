@@ -1,5 +1,5 @@
 import type { Requester } from '../http/requester'
-import type { Endpoints, Logger } from '../options'
+import type { DisqusEmbedInput, Endpoints, Logger } from '../options'
 import type {
   Comment, CommentRef, DiscussionQuery, Platform, PlatformCapabilities, ThreadRef,
 } from '../types'
@@ -10,6 +10,7 @@ export interface ProviderCtx {
   getToken?(p: Platform): string | undefined | Promise<string | undefined>
   youtubeApiKey?: string
   log: Logger
+  disqusEmbed?(input: DisqusEmbedInput): string
 }
 
 export interface PostCommentOpts {
