@@ -24,6 +24,7 @@ export interface Thread {
   id: string
   title: string
   url?: string
+  embedUrl?: string
   author?: string
   createdAt?: number // epoch ms
   replyCount?: number

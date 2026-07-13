@@ -64,3 +64,18 @@ test('capabilities delegates; unsupported write throws NotSupportedError', async
   expect(c.capabilities('youtube').comment).toBe(false)
   await expect(c.postComment({ platform: 'youtube', id: 'x' }, 'hi')).rejects.toBeInstanceOf(NotSupportedError)
 })
+
+test('getDiscussion carries embedUrl from the ref onto the Thread', async () => {
+  const http = fakeHttp([
+    { match: '/api/threads/by-anime', json: { threads: [
+      { id: 1, slug: 's', title: 'Ep 5', episode_number: 5, episode_number_end: null, comment_count: 2, created_at: 0, identifier: 'thread-5', url: 'https://d.test/t/5', forum_shortname: 'f', is_embed: 1, embed_url: 'https://d.test/embed/5' },
+    ], has_more: false } },
+    { match: 'graphql.anilist.co', json: { data: { Page: { threads: [] } } } },
+    { match: '/r/anime/search.json', json: { data: { children: [] } } },
+    { match: 'api.hayami.moe/anime/search', json: { results: [] } },
+    { match: '/anime/21/forum', json: { data: [] } },
+  ])
+  const threads = await client(http).getDiscussion({ malId: 21, episode: 5 }, { sources: ['forum'] })
+  const forum = threads.find((t) => t.platform === 'forum')
+  expect(forum?.embedUrl).toBe('https://d.test/embed/5')
+})

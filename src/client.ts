@@ -58,6 +58,7 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
     return Promise.all(refs.map(async (r): Promise<Thread> => {
       const thread: Thread = { platform: r.platform, id: r.id, title: '' }
       if (r.url) thread.url = r.url
+      if (r.embedUrl) thread.embedUrl = r.embedUrl
       if (typeof r.commentCount === 'number') thread.replyCount = r.commentCount
       if (opts?.withComments) {
         try {
