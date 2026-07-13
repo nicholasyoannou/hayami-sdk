@@ -5,7 +5,7 @@ test('default endpoints point at the real public hosts', () => {
   expect(DEFAULT_ENDPOINTS.mapper).toBe('https://discussanime.moe')
   expect(DEFAULT_ENDPOINTS.anilist).toBe('https://graphql.anilist.co')
   expect(DEFAULT_ENDPOINTS.hayamiMapper).toBe('https://api.hayami.moe')
-  expect(DEFAULT_ENDPOINTS.tacEmbed).toBe('https://hayami.moe/embed/tac')
+  expect(DEFAULT_ENDPOINTS.tacScript).toBe('https://theanimecommunity.com/embed.js')
 })
 
 test('mapperBaseUrl overrides endpoints.mapper', () => {

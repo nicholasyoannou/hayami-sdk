@@ -9,6 +9,14 @@ export interface DiscussionQuery {
   isMovie?: boolean
 }
 
+export interface ScriptEmbed {
+  scriptSrc: string
+  scriptId: string
+  containerId: string
+  configVar: string
+  config: Record<string, string | number>
+}
+
 export interface ThreadRef {
   platform: Platform
   id: string
@@ -17,6 +25,7 @@ export interface ThreadRef {
   episodeEnd?: number
   commentCount?: number
   embedUrl?: string
+  scriptEmbed?: ScriptEmbed
 }
 
 export interface Thread {
@@ -25,6 +34,7 @@ export interface Thread {
   title: string
   url?: string
   embedUrl?: string
+  scriptEmbed?: ScriptEmbed
   author?: string
   createdAt?: number // epoch ms
   replyCount?: number

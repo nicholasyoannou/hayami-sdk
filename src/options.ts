@@ -25,7 +25,7 @@ export interface Endpoints {
   mal: string
   youtube: string
   hayamiMapper: string // api.hayami.moe — Hayami mapper: reddit (default) / youtube (platform=youtube) / aniwave
-  tacEmbed: string // hayami.moe TAC embed widget
+  tacScript: string // theanimecommunity.com embed.js
 }
 
 export const DEFAULT_ENDPOINTS: Endpoints = {
@@ -37,7 +37,7 @@ export const DEFAULT_ENDPOINTS: Endpoints = {
   mal: 'https://api.myanimelist.net/v2',
   youtube: 'https://www.googleapis.com/youtube/v3',
   hayamiMapper: 'https://api.hayami.moe',
-  tacEmbed: 'https://hayami.moe/embed/tac',
+  tacScript: 'https://theanimecommunity.com/embed.js',
 }
 
 export interface CacheAdapter {

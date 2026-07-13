@@ -66,6 +66,7 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
       const thread: Thread = { platform: r.platform, id: r.id, title: '' }
       if (r.url) thread.url = r.url
       if (r.embedUrl) thread.embedUrl = r.embedUrl
+      if (r.scriptEmbed) thread.scriptEmbed = r.scriptEmbed
       if (typeof r.commentCount === 'number') thread.replyCount = r.commentCount
       if (opts?.withComments) {
         try {
