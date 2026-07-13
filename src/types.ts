@@ -60,3 +60,24 @@ export interface PlatformCapabilities {
   vote: boolean
   downvote: boolean
 }
+
+export const REACTION_KEYS = ['upvote', 'funny', 'love', 'surprised', 'angry', 'sad'] as const
+export type ReactionKey = (typeof REACTION_KEYS)[number]
+
+export interface Reactions {
+  threadId?: number
+  heading?: string
+  keys: ReactionKey[]
+  labels: Record<ReactionKey, string>
+  sprites: Partial<Record<ReactionKey, string>>
+  counts: Record<ReactionKey, number>
+  selectedKey: ReactionKey | null
+  loggedIn: boolean
+  total: number
+}
+
+export interface ReactResult {
+  ok: boolean
+  needsLogin: boolean
+  counts?: Record<ReactionKey, number>
+}

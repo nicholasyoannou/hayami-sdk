@@ -3,7 +3,8 @@ import { NotSupportedError } from './http/errors'
 import { buildRegistry, type ProviderCtx } from './providers/provider'
 import { resolveEndpoints, type DiscussionClientOptions, type Logger } from './options'
 import type {
-  Comment, CommentRef, DiscussionQuery, Platform, PlatformCapabilities, Thread, ThreadRef,
+  Comment, CommentRef, DiscussionQuery, Platform, PlatformCapabilities, ReactionKey, ReactResult,
+  Reactions, Thread, ThreadRef,
 } from './types'
 import { redditProvider } from './providers/reddit/index'
 import { anilistProvider } from './providers/anilist/index'
@@ -12,6 +13,7 @@ import { youtubeProvider } from './providers/youtube/index'
 import { forumProvider } from './providers/forum/index'
 import { searchRedditDiscussion } from './providers/reddit/search'
 import { postToThread } from './providers/reddit/normalize'
+import { fetchReactions, postReaction } from './providers/forum/reactions'
 
 const NO_CAPS: PlatformCapabilities = { comment: false, edit: false, delete: false, vote: false, downvote: false }
 const noopLogger: Logger = { debug() {}, warn() {}, error() {} }
@@ -26,6 +28,8 @@ export interface DiscussionClient {
   editComment(ref: CommentRef, bodyMarkdown: string): Promise<Comment>
   deleteComment(ref: CommentRef): Promise<void>
   capabilities(platform: Platform): PlatformCapabilities
+  getReactions(ref: ThreadRef): Promise<Reactions | null>
+  react(ref: ThreadRef, key: ReactionKey | null): Promise<ReactResult>
 }
 
 export function createDiscussionClient(o: DiscussionClientOptions): DiscussionClient {
@@ -110,5 +114,18 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
     return p.vote(target, dir, ctx)
   }
 
-  return { resolve, getComments, getDiscussion, searchReddit, capabilities, postComment, editComment, deleteComment, vote }
+  async function getReactions(ref: ThreadRef): Promise<Reactions | null> {
+    if (ref.platform !== 'forum' && ref.platform !== 'disqus') return null
+    return fetchReactions(ctx, ref.id)
+  }
+
+  async function react(ref: ThreadRef, key: ReactionKey | null): Promise<ReactResult> {
+    if (ref.platform !== 'forum' && ref.platform !== 'disqus') return { ok: false, needsLogin: false }
+    return postReaction(ctx, ref.id, key)
+  }
+
+  return {
+    resolve, getComments, getDiscussion, searchReddit, capabilities, postComment, editComment, deleteComment, vote,
+    getReactions, react,
+  }
 }

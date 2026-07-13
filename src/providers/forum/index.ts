@@ -38,3 +38,4 @@ export const forumProvider: Provider = {
 export * from './wire'
 export { matchEpisodeThread } from './match'
 export { rowToThreadRef, lookupRowToThreadRef } from './normalize'
+export { fetchReactions, postReaction } from './reactions'

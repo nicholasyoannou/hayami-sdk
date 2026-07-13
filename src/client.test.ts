@@ -79,3 +79,11 @@ test('getDiscussion carries embedUrl from the ref onto the Thread', async () => 
   const forum = threads.find((t) => t.platform === 'forum')
   expect(forum?.embedUrl).toBe('https://d.test/embed/5')
 })
+
+test('getReactions delegates for forum refs, null for non-forum', async () => {
+  const http = fakeHttp([{ match: '/api/threads/by-identifier/thread-5/reaction', json: { threadId: 5, counts: { love: 1 }, selectedKey: null, loggedIn: false } }])
+  const c = client(http)
+  const r = await c.getReactions({ platform: 'forum', id: 'thread-5' } as any)
+  expect(r?.counts.love).toBe(1)
+  expect(await c.getReactions({ platform: 'reddit', id: 'x' } as any)).toBeNull()
+})
