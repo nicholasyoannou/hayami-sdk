@@ -1,17 +1,30 @@
 import type { ThreadRef } from '../../types'
 import type { AnimeThreadRow, LookupThreadRow } from './wire'
 
-/** Direct Disqus embed iframe URL — what the Disqus loader builds internally. */
+// Disqus's embed comments page bootstraps off the `#version=` fragment; a raw
+// iframe without it (and the full param set) renders blank. This is Disqus's
+// embed build hash — update it if Disqus bumps its embed version.
+const DISQUS_EMBED_VERSION = '6a1aabb94f5e0fb7334f0cd7f5a7679c'
+
+/**
+ * Direct Disqus embed iframe URL that renders standalone (reproduces exactly
+ * what the Disqus loader builds: full param set + `#version` fragment,
+ * `encodeURIComponent`-encoded so spaces are `%20`, not `+`).
+ */
 function disqusEmbedUrl(row: { forum_shortname?: string; identifier: string | number; url: string; title: string }): string | undefined {
   if (!row.forum_shortname || row.identifier == null) return undefined
-  const p = new URLSearchParams({
-    base: 'default',
-    f: row.forum_shortname,
-    t_i: String(row.identifier),
-    t_u: row.url,
-    t_t: row.title,
-  })
-  return `https://disqus.com/embed/comments/?${p.toString()}`
+  const enc = encodeURIComponent
+  const title = enc(row.title ?? '')
+  const query =
+    'base=default' +
+    `&f=${enc(row.forum_shortname)}` +
+    `&t_i=${enc(String(row.identifier))}` +
+    `&t_u=${enc(row.url)}` +
+    `&t_e=${title}` +
+    '&t_d=' +
+    `&t_t=${title}` +
+    '&s_o=default'
+  return `https://disqus.com/embed/comments/?${query}#version=${DISQUS_EMBED_VERSION}`
 }
 
 export function rowToThreadRef(row: AnimeThreadRow): ThreadRef {

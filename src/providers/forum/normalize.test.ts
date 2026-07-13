@@ -15,12 +15,12 @@ test('is_embed=1 → forum platform with embedUrl; id is the identifier', () => 
 test('is_embed absent → disqus platform, constructed Disqus embedUrl, range end kept', () => {
   const ref = rowToThreadRef({ ...base, episode_number_end: 4 })
   expect(ref.platform).toBe('disqus')
-  expect(ref.embedUrl).toBe('https://disqus.com/embed/comments/?base=default&f=f&t_i=thread-42&t_u=https%3A%2F%2Fd.test%2Ft%2F42&t_t=t')
+  expect(ref.embedUrl).toBe('https://disqus.com/embed/comments/?base=default&f=f&t_i=thread-42&t_u=https%3A%2F%2Fd.test%2Ft%2F42&t_e=t&t_d=&t_t=t&s_o=default#version=6a1aabb94f5e0fb7334f0cd7f5a7679c')
   expect(ref.episodeEnd).toBe(4)
 })
 
 test('lookupRowToThreadRef: disqus gets a constructed embedUrl', () => {
   const ref = lookupRowToThreadRef({ id: 1, slug: 's', title: 't', identifier: 'thread-9', url: 'https://d.test/t/9', forum_shortname: 'sub' })
   expect(ref.platform).toBe('disqus')
-  expect(ref.embedUrl).toBe('https://disqus.com/embed/comments/?base=default&f=sub&t_i=thread-9&t_u=https%3A%2F%2Fd.test%2Ft%2F9&t_t=t')
+  expect(ref.embedUrl).toBe('https://disqus.com/embed/comments/?base=default&f=sub&t_i=thread-9&t_u=https%3A%2F%2Fd.test%2Ft%2F9&t_e=t&t_d=&t_t=t&s_o=default#version=6a1aabb94f5e0fb7334f0cd7f5a7679c')
 })
