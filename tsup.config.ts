@@ -9,6 +9,7 @@ export default defineConfig({
     'mal/index': 'src/providers/mal/index.ts',
     'youtube/index': 'src/providers/youtube/index.ts',
     'forum/index': 'src/providers/forum/index.ts',
+    'animecommunity/index': 'src/providers/animecommunity/index.ts',
   },
   format: ['esm'],
   dts: true,

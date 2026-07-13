@@ -1,4 +1,4 @@
-export const PLATFORMS = ['reddit', 'anilist', 'mal', 'youtube', 'forum', 'disqus'] as const
+export const PLATFORMS = ['reddit', 'anilist', 'mal', 'youtube', 'forum', 'disqus', 'animecommunity'] as const
 export type Platform = (typeof PLATFORMS)[number]
 
 export interface DiscussionQuery {

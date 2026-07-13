@@ -13,6 +13,7 @@
     "./mal": { "types": "./dist/mal/index.d.ts", "import": "./dist/mal/index.js" },
     "./youtube": { "types": "./dist/youtube/index.d.ts", "import": "./dist/youtube/index.js" },
     "./forum": { "types": "./dist/forum/index.d.ts", "import": "./dist/forum/index.js" },
+    "./animecommunity": { "types": "./dist/animecommunity/index.d.ts", "import": "./dist/animecommunity/index.js" },
     "./types": { "types": "./dist/types.d.ts", "import": "./dist/types.js" }
   },
   "scripts": {

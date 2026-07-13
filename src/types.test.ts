@@ -3,7 +3,7 @@ import { PLATFORMS, type Platform } from './types'
 
 test('PLATFORMS lists every platform exactly once', () => {
   expect([...PLATFORMS].sort()).toEqual(
-    ['anilist', 'disqus', 'forum', 'mal', 'reddit', 'youtube'],
+    ['anilist', 'animecommunity', 'disqus', 'forum', 'mal', 'reddit', 'youtube'],
   )
 })
 

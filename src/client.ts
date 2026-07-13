@@ -11,6 +11,7 @@ import { anilistProvider } from './providers/anilist/index'
 import { malProvider } from './providers/mal/index'
 import { youtubeProvider } from './providers/youtube/index'
 import { forumProvider } from './providers/forum/index'
+import { animecommunityProvider } from './providers/animecommunity/index'
 import { searchRedditDiscussion } from './providers/reddit/search'
 import { postToThread } from './providers/reddit/normalize'
 import { fetchReactions, postReaction } from './providers/forum/reactions'
@@ -41,7 +42,7 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
   const ctx: ProviderCtx = {
     request, endpoints, getToken: o.getToken, youtubeApiKey: o.youtubeApiKey, log,
   }
-  const registry = buildRegistry([redditProvider, anilistProvider, malProvider, youtubeProvider, forumProvider])
+  const registry = buildRegistry([redditProvider, anilistProvider, malProvider, youtubeProvider, forumProvider, animecommunityProvider])
 
   async function resolve(q: DiscussionQuery): Promise<ThreadRef[]> {
     const lists = await Promise.all(
