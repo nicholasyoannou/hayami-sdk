@@ -49,16 +49,6 @@ export interface Logger {
   error(...a: unknown[]): void
 }
 
-export interface DisqusEmbedInput {
-  forumShortname: string
-  identifier: string
-  url: string
-  title: string
-  malId?: number
-  anilistId?: number
-  episode?: number
-}
-
 export interface DiscussionClientOptions {
   http: HttpAdapter
   mapperBaseUrl?: string
@@ -68,7 +58,6 @@ export interface DiscussionClientOptions {
   cache?: CacheAdapter
   logger?: Logger
   defaultTimeoutMs?: number
-  disqusEmbed?(input: DisqusEmbedInput): string
 }
 
 export function resolveEndpoints(

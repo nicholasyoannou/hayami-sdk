@@ -39,7 +39,7 @@ export function createDiscussionClient(o: DiscussionClientOptions): DiscussionCl
     http: o.http, getToken: o.getToken, cache: o.cache, logger: log, defaultTimeoutMs: o.defaultTimeoutMs,
   })
   const ctx: ProviderCtx = {
-    request, endpoints, getToken: o.getToken, youtubeApiKey: o.youtubeApiKey, log, disqusEmbed: o.disqusEmbed,
+    request, endpoints, getToken: o.getToken, youtubeApiKey: o.youtubeApiKey, log,
   }
   const registry = buildRegistry([redditProvider, anilistProvider, malProvider, youtubeProvider, forumProvider])
 
